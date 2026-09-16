@@ -40,15 +40,15 @@ This ensured clean, structured, and analysis-ready data.
 ---
 
 **🔹 Total Revenue by Gender**
-'''sql 
+```sql 
 SELECT gender,
        SUM(purchase_amount) AS total_revenue
 FROM customer
 GROUP BY gender;
-'''
+```
 ---
 🔹 Customers Who Used Discount & Spent Above Average
-WITH cte AS (
+```sql WITH cte AS (
     SELECT AVG(purchase_amount) AS average_spend
     FROM customer
 )
@@ -57,33 +57,37 @@ SELECT c.customer_id,
 FROM customer c, cte
 WHERE c.discount_applied = 'Yes'
   AND c.purchase_amount >= cte.average_spend;
+```
 ---
 🔹 Top 5 Products with Highest Average Review Rating
-SELECT item_purchased,
+```sql SELECT item_purchased,
        ROUND(AVG(review_rating)::numeric, 2) AS average_product_rating
 FROM customer
 GROUP BY item_purchased
 ORDER BY AVG(review_rating) DESC
 LIMIT 5;
+```
 ---
 🔹 Average Purchase Comparison: Standard vs Express Shipping
-SELECT shipping_type,
+```sql SELECT shipping_type,
        ROUND(AVG(purchase_amount), 2) AS average_spend
 FROM customer
 WHERE shipping_type IN ('Standard', 'Express')
 GROUP BY shipping_type;
+```
 ---
 🔹 Subscriber vs Non-Subscriber Revenue Comparison
-SELECT subscription_status,
+```sql SELECT subscription_status,
        COUNT(customer_id) AS total_customers,
        ROUND(AVG(purchase_amount), 2) AS avg_spend,
        SUM(purchase_amount) AS total_revenue
 FROM customer
 GROUP BY subscription_status
 ORDER BY total_revenue DESC;
+```
 ---
 🔹 Top 5 Products with Highest Discount Usage Percentage
-SELECT item_purchased,
+```sql SELECT item_purchased,
        ROUND(
            SUM(CASE WHEN discount_applied = 'Yes' THEN 1 ELSE 0 END) * 100.0
            / COUNT(*), 2
@@ -92,9 +96,10 @@ FROM customer
 GROUP BY item_purchased
 ORDER BY discount_percentage DESC
 LIMIT 5;
+```
 ---
 🔹 Customer Segmentation (New, Returning, Loyal)
-WITH customer_type AS (
+```sql WITH customer_type AS (
     SELECT customer_id,
            CASE
              WHEN previous_purchases = 1 THEN 'New'
@@ -107,9 +112,10 @@ SELECT customer_segment,
        COUNT(*) AS total_customers
 FROM customer_type
 GROUP BY customer_segment;
+```
 ---
 🔹 Top 3 Most Purchased Products Within Each Category
-WITH cte AS (
+```sql WITH cte AS (
     SELECT category,
            item_purchased,
            COUNT(*) AS cnt
@@ -127,20 +133,23 @@ FROM (
     FROM cte
 ) ranked
 WHERE rnk <= 3;
+```
 ---
 🔹 Repeat Buyers & Subscription Status
-SELECT subscription_status,
+```sql SELECT subscription_status,
        COUNT(customer_id) AS repeat_buyers
 FROM customer
 WHERE previous_purchases > 5
 GROUP BY subscription_status;
+```
 ---
 🔹 Revenue Contribution by Age Group
-SELECT age_group,
+```sql SELECT age_group,
        SUM(purchase_amount) AS total_revenue
 FROM customer
 GROUP BY age_group
 ORDER BY total_revenue DESC;
+```
 ---
 
 ## 📊 Power BI Dashboard
