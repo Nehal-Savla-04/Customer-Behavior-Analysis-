@@ -48,9 +48,10 @@ GROUP BY gender;
 ```
 ---
 🔹 Customers Who Used Discount & Spent Above Average
-```sql WITH cte AS (
-    SELECT AVG(purchase_amount) AS average_spend
-    FROM customer
+```sql
+WITH cte AS (
+       SELECT AVG(purchase_amount) AS average_spend
+       FROM customer
 )
 SELECT c.customer_id,
        c.purchase_amount
@@ -60,7 +61,8 @@ WHERE c.discount_applied = 'Yes'
 ```
 ---
 🔹 Top 5 Products with Highest Average Review Rating
-```sql SELECT item_purchased,
+```sql
+SELECT item_purchased,
        ROUND(AVG(review_rating)::numeric, 2) AS average_product_rating
 FROM customer
 GROUP BY item_purchased
@@ -69,7 +71,8 @@ LIMIT 5;
 ```
 ---
 🔹 Average Purchase Comparison: Standard vs Express Shipping
-```sql SELECT shipping_type,
+```sql
+SELECT shipping_type,
        ROUND(AVG(purchase_amount), 2) AS average_spend
 FROM customer
 WHERE shipping_type IN ('Standard', 'Express')
@@ -77,7 +80,8 @@ GROUP BY shipping_type;
 ```
 ---
 🔹 Subscriber vs Non-Subscriber Revenue Comparison
-```sql SELECT subscription_status,
+```sql
+SELECT subscription_status,
        COUNT(customer_id) AS total_customers,
        ROUND(AVG(purchase_amount), 2) AS avg_spend,
        SUM(purchase_amount) AS total_revenue
@@ -87,7 +91,8 @@ ORDER BY total_revenue DESC;
 ```
 ---
 🔹 Top 5 Products with Highest Discount Usage Percentage
-```sql SELECT item_purchased,
+```sql
+SELECT item_purchased,
        ROUND(
            SUM(CASE WHEN discount_applied = 'Yes' THEN 1 ELSE 0 END) * 100.0
            / COUNT(*), 2
@@ -99,7 +104,8 @@ LIMIT 5;
 ```
 ---
 🔹 Customer Segmentation (New, Returning, Loyal)
-```sql WITH customer_type AS (
+```sql
+WITH customer_type AS (
     SELECT customer_id,
            CASE
              WHEN previous_purchases = 1 THEN 'New'
@@ -115,7 +121,8 @@ GROUP BY customer_segment;
 ```
 ---
 🔹 Top 3 Most Purchased Products Within Each Category
-```sql WITH cte AS (
+```sql
+WITH cte AS (
     SELECT category,
            item_purchased,
            COUNT(*) AS cnt
@@ -136,7 +143,8 @@ WHERE rnk <= 3;
 ```
 ---
 🔹 Repeat Buyers & Subscription Status
-```sql SELECT subscription_status,
+```sql
+SELECT subscription_status,
        COUNT(customer_id) AS repeat_buyers
 FROM customer
 WHERE previous_purchases > 5
@@ -144,7 +152,8 @@ GROUP BY subscription_status;
 ```
 ---
 🔹 Revenue Contribution by Age Group
-```sql SELECT age_group,
+```sql
+SELECT age_group,
        SUM(purchase_amount) AS total_revenue
 FROM customer
 GROUP BY age_group
@@ -180,6 +189,11 @@ An interactive Power BI dashboard was created to provide a consolidated view of 
 The dashboard allows users to explore customer behavior across different demographic and purchasing dimensions.
 
 ---
+## 📷 Dashboard Preview
+
+<img width="1540" height="868" alt="image" src="https://github.com/user-attachments/assets/a9f155bf-ed51-4c31-b820-280d521edb10" />
+
+---
 
 ## 🔍 Key Insights
 
@@ -187,5 +201,9 @@ The dashboard allows users to explore customer behavior across different demogra
 - **73% of customers are non-subscribers**, while subscribers represent 27% of the customer base.
 - **Medium (M)** is the most common customer-selected size in the dataset.
 - **Senior Citizens** represent the largest customer age group.
+---
+## 📌 Conclusion
+This project demonstrates end-to-end data analytics capabilities — from Python-based data cleaning and SQL analysis to Power BI dashboard creation.
+It converts raw retail data into meaningful insights that support strong data-driven business decisions.
 - The customer base contains a substantial proportion of **loyal customers** based on previous purchase frequency.
 - Customer purchasing behavior can be further compared across subscription status, age group, gender, shipping type, and product category.
